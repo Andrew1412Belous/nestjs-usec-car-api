@@ -5,6 +5,7 @@ import {
 	Entity,
 	Column,
 	PrimaryGeneratedColumn,
+	Index,
 } from 'typeorm';
 
 @Entity()
@@ -13,6 +14,7 @@ export class User {
 	id: number;
 
 	@Column()
+	@Index()
 	email: string;
 
 	@Column()

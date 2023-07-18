@@ -42,4 +42,15 @@ export class UsersService {
 
 		return this.repo.remove(user);
 	}
+
+	async isEmailInUse(email: string): Promise<boolean> {
+		const count: number = await this.repo
+			.createQueryBuilder('user')
+			.select(['id'])
+			.where('user.email = :email', { email: email })
+			.limit(1)
+			.getCount();
+
+		return count >= 1;
+	}
 }
