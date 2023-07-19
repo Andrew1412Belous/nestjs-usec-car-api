@@ -1,7 +1,10 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersService } from './users.service';
-import * as bcrypt from 'bcrypt';
 import { User } from './users.entity';
+import { randomBytes, scrypt as _scrypt } from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(_scrypt);
 
 @Injectable()
 export class AuthService {
@@ -14,26 +17,26 @@ export class AuthService {
 			throw new BadRequestException('email is already in use');
 		}
 
-		const salt = 10;
-		const hashedPassword = await bcrypt.hash(password, salt);
+		const salt = randomBytes(8).toString('hex');
+		const hash = (await scrypt(password, salt, 32)) as Buffer;
+		const result = salt + '.' + hash.toString('hex');
 
-		return await this.usersService.create(email, hashedPassword);
+		return await this.usersService.create(email, result);
 	}
 
 	async signin(email: string, password: string): Promise<User> {
 		const [user] = await this.usersService.find(email);
 
 		if (!user) {
-			throw new NotFoundException('Incorrect password');
+			throw new NotFoundException('Email is already in use');
 		}
 
-		const salt = 10;
-		const hash = await bcrypt.hash(password, salt);
+		const [salt, storedHash] = user.password.split('.');
 
-		const isMatch = await bcrypt.compare(password, hash);
+		const hash = (await scrypt(password, salt, 32)) as Buffer;
 
-		if (!isMatch) {
-			throw new BadRequestException('email is already in use');
+		if (storedHash !== hash.toString('hex')) {
+			throw new BadRequestException('Incorrect password');
 		}
 
 		return user;

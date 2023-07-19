@@ -3,7 +3,7 @@ POST http://localhost:3000/auth/signup
 content-type: application/json
 
 {
-  "email": "test123@gmail.com",
+  "email": "asdf@asdf.com",
   "password": "test123"
 }
 
@@ -13,13 +13,13 @@ POST http://localhost:3000/auth/signin
 content-type: application/json
 
 {
-"email": "test2@gmail.com",
+"email": "asdf@asdf.com",
 "password": "test123"
 }
 
 
 ### Find by id
-GET http://localhost:3000/auth/9
+GET http://localhost:3000/auth/14
 
 
 ### Find all users by email
