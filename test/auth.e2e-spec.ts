@@ -33,10 +33,27 @@ describe('Authentication System', () => {
 			});
 	});
 
-	afterAll(async () => {
-		await app.close();
+	it('signup as a new user then get currently logged in user', async () => {
+		const user = {
+			email: 'testsome@test.com',
+			password: 'password',
+		};
+
+		const res = await request(app.getHttpServer()).post('/auth/signup').send(user).expect(200);
+		const cookie = res.get('Set-Cookie');
+
+		const { body } = await request(app.getHttpServer())
+			.get('/auth/whoami')
+			.set('Cookie', cookie)
+			.expect(200);
+
+		expect(body.email).toEqual(user.email);
 	});
-	// afterEach(async () => {
+
+	// afterAll(async () => {
 	// 	await app.close();
 	// });
+	afterEach(async () => {
+		await app.close();
+	});
 });

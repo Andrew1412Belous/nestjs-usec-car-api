@@ -19,10 +19,10 @@ describe('AppController (e2e)', () => {
 		return request(app.getHttpServer()).get('/').expect(200).expect('Hello World!');
 	});
 
-	afterAll(async () => {
-		await app.close();
-	});
-	// afterEach(async () => {
+	// afterAll(async () => {
 	// 	await app.close();
 	// });
+	afterEach(async () => {
+		await app.close();
+	});
 });
