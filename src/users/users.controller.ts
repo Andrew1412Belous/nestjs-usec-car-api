@@ -18,8 +18,8 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthService } from './auth.service';
 import { UserDto } from './dto/user.dto';
 import { Serialize } from '../decorators/serialize.decorator';
-import { CurrentUser } from './decorators/current-user.decorator';
-import { User } from './users.entity';
+import { CurrentUser } from '../decorators/current-user.decorator';
+import { User } from './user.entity';
 import { AuthGuard } from '../guards/auth.guard';
 
 @Controller('auth')
