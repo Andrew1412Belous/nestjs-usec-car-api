@@ -37,7 +37,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 		{
 			provide: APP_PIPE,
 			useValue: new ValidationPipe({
+				transform: true,
+				transformOptions: {
+					enableImplicitConversion: true,
+				},
 				whitelist: true,
+				stopAtFirstError: true,
 			}),
 		},
 	],
