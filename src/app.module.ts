@@ -10,8 +10,6 @@ import * as dbConfig from '../ormconfig';
 
 import CookieSession = require('cookie-session');
 import { ConfigModule, ConfigService } from '@nestjs/config';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// const dbConfig = require('../ormconfig.js');
 
 @Module({
 	imports: [
