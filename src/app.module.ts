@@ -10,6 +10,10 @@ import { APP_PIPE } from '@nestjs/core';
 
 import CookieSession = require('cookie-session');
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { config } from 'rxjs';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const dbConfig = require('../ormconfig.js');
 
 @Module({
 	imports: [
@@ -17,17 +21,18 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 			isGlobal: true,
 			envFilePath: `.env.${process.env.NODE_ENV}`,
 		}),
-		TypeOrmModule.forRootAsync({
-			inject: [ConfigService],
-			useFactory: (config: ConfigService) => {
-				return {
-					type: 'sqlite',
-					database: config.get<string>('DB_NAME'),
-					entities: [User, Report],
-					synchronize: true,
-				};
-			},
-		}),
+		TypeOrmModule.forRoot(dbConfig),
+		// TypeOrmModule.forRootAsync({
+		// 	inject: [ConfigService],
+		// 	useFactory: (config: ConfigService) => {
+		// 		return {
+		// 			type: 'sqlite',
+		// 			database: config.get<string>('DB_NAME'),
+		// 			entities: [User, Report],
+		// 			synchronize: true,
+		// 		};
+		// 	},
+		// }),
 		ReportsModule,
 		UsersModule,
 	],
@@ -48,11 +53,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 	],
 })
 export class AppModule {
+	constructor(private readonly configService: ConfigService) {}
+
 	configure(consumer: MiddlewareConsumer) {
 		consumer
 			.apply(
 				CookieSession({
-					keys: ['asd'],
+					keys: [this.configService.get('COOKIE_KEY')],
 				}),
 			)
 			.forRoutes('*');
