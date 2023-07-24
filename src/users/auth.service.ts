@@ -11,9 +11,9 @@ export class AuthService {
 	constructor(private readonly usersService: UsersService) {}
 
 	async signup(email: string, password: string): Promise<User> {
-		const isEmailInUse: boolean = await this.usersService.isEmailInUse(email);
+		const users = await this.usersService.find(email);
 
-		if (isEmailInUse) {
+		if (users.length) {
 			throw new BadRequestException('email is already in use');
 		}
 

@@ -17,9 +17,8 @@ content-type: application/json
 "password": "test123"
 }
 
-
 ### Find by id
-GET http://localhost:3000/auth/14
+GET http://localhost:3000/auth/1
 
 
 ### Find all users by email
